@@ -94,6 +94,10 @@ public class PrecisionVerification extends BaseVerification {
     {
     	return this.MeasuringTimes()*(this.BatchCount()-1);
     }
+    /**
+     * 重复精密度的验证值
+     * @return
+     */
     public double RepeatPrecisionValue()
     {
     	double T=v(); 
@@ -126,9 +130,28 @@ public class PrecisionVerification extends BaseVerification {
         T=T/k;
         return format(T);
     }
-    
     /**
-     * 计算区间精准度的验证值
+     * 精确度的SDI(Standard Deviation Index)数组
+     * @return
+     */
+    public double[] sdi()
+    {
+    	double sd=this.GroupStandardDeviation();
+    	double avg=this.GroupAverage();
+    	double result[]=new double[this.BatchCount()*this.MeasuringTimes()];
+    	int i=0;
+    	for(LabData data : batches)
+    	{
+    		for(int j=0;j<data.Count();j++)
+    		{
+    			result[i]=format((data.Data(j)-avg)/sd);
+    			i=i+1;
+    		}
+    	}
+    	return result;
+    }
+    /**
+     * 区间精准度的验证值
      * @return
      */    
     public double PrecisionValue()
