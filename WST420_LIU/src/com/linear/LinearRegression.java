@@ -1,6 +1,5 @@
 package com.linear;
 
-import java.util.List;
 import com.base.BaseVerification;
 import com.base.LabData;
 

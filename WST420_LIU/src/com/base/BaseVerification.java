@@ -2,7 +2,6 @@ package com.base;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.math.BigDecimal; 
  
 
 /**
@@ -70,6 +69,16 @@ public class BaseVerification {
     	data.DecimalBits=this.DecimalBits;
         batches.add(data);
     }
+    /**
+     * 一次性设置好所有数据
+     * @param dataStr 形如140 140 140;139 138 139;140 141 140
+     */
+    public void SetLabData(String dataStr)
+    {
+    	String[] labDataStr=dataStr.split(";");        
+        for(int i=0;i<labDataStr.length;i++)
+            Add(new LabData(labDataStr[i]));        
+    }
     
     /**
      * 获取第几批实验数据
@@ -79,5 +88,60 @@ public class BaseVerification {
     public LabData GetLabData(int index)
     {
     	return batches.get(index);
+    }
+    /**
+     * 每组实验数据和
+     * @return
+     */
+    public double[] GetSums()
+    {
+    	double[] temp=new double[BatchCount()];
+    	for(int i=0;i<temp.length;i++)
+    		temp[i]=this.GetLabData(i).Sum();
+    	return temp;
+    }
+    /**
+     * 每组实验数据均值
+     * @return
+     */
+    public double[] GetAverages()
+    {
+    	double[] temp=new double[BatchCount()];
+    	for(int i=0;i<temp.length;i++)
+    		temp[i]=this.GetLabData(i).Average();
+    	return temp;
+    }
+    /**
+     * 每组实验数据批内方差
+     * @return
+     */
+    public double[] GetIntraGroupVars()
+    {
+    	double[] temp=new double[BatchCount()];
+    	for(int i=0;i<temp.length;i++)
+    		temp[i]=this.GetLabData(i).IntraGroupVariance();
+    	return temp;
+    }
+    /**
+     * 每组实验数据标准差
+     * @return
+     */
+    public double[] GetStandardDeviations()
+    {
+    	double[] temp=new double[BatchCount()];
+    	for(int i=0;i<temp.length;i++)
+    		temp[i]=this.GetLabData(i).StandardDeviation();
+    	return temp;
+    }
+    /**
+     * 每组实验数据离差平方和
+     * @return
+     */
+    public double[] GetSumOfSquares()
+    {
+    	double[] temp=new double[BatchCount()];
+    	for(int i=0;i<temp.length;i++)
+    		temp[i]=this.GetLabData(i).SumOfSquares();
+    	return temp;
     }
 }

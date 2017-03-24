@@ -39,20 +39,62 @@ public class AccuracyFromPatientSample extends BaseVerification
     {
         return batches.get(1);
     }
-    
     /**
-     * 绝对偏移
+     * 绝对偏移数组
+     * @return
+     */
+    public double[] AbsoluteOffsetArray()
+    {
+    	int m=MeasuringTimes();
+    	double[] array=new double[m];    	
+        for(int i=0;i<m;i++)
+        {
+        	double Ri=Ri().Data(i);
+        	double Rc=Rc().Data(i);
+            array[i]=format(Ri-Rc);
+        }
+        return array;
+    }
+    /**
+     * 相对偏移数组
+     * @return
+     */
+    public double[] RelativeOffsetArray()
+    {    	
+    	double[] array=AbsoluteOffsetArray();  	
+        for(int i=0;i<array.length;i++)
+        {        	
+        	double Rc=Rc().Data(i);
+            array[i]=format(array[i]/Rc);
+        }
+        return array;
+    }
+    /**
+     * 两个方法间的绝对偏移
      * @return
      */
     public double AbsoluteOffset()
     {
         double sum=0;
-        int m=MeasuringTimes();
-        for(int i=0;i<m;i++)
-            sum+=(Ri().Data(i)-Rc().Data(i));
-        return format(sum/m);
+        double[] array=AbsoluteOffsetArray(); 
+        
+        for(int i=0;i<array.length;i++)
+            sum+=array[i];
+        return format(sum/array.length);
     }
-    
+    /**
+     * 两个方法间的相对偏移
+     * @return
+     */
+    public double RelativeOffset()
+    {
+    	double sum=0;
+        double[] array=RelativeOffsetArray(); 
+        
+        for(int i=0;i<array.length;i++)
+            sum+=array[i];
+        return format(sum/array.length);
+    }
     /**
      * 绝对偏移的标准差
      * @return
@@ -69,9 +111,24 @@ public class AccuracyFromPatientSample extends BaseVerification
         }
         return format2(Math.sqrt(sum/(m-1)));
     }
-    
     /**
-     * 验证区间的下限
+     * 相对偏移的标准差
+     * @return
+     */
+    public double RelativeStandardDeviation()
+    {
+    	double sum=0;
+        double a=RelativeOffset();
+        int m=MeasuringTimes();
+        for(int i=0;i<m;i++)
+        {
+            double b=Ri().Data(i)-Rc().Data(i)-a;
+            sum+=b*b;
+        }
+        return format2(Math.sqrt(sum/(m-1)));
+    }
+    /**
+     * 验证区间的绝对下限
      * @return
      */
     public double MinOfInterval()
@@ -84,7 +141,7 @@ public class AccuracyFromPatientSample extends BaseVerification
     }
     
     /**
-     * 验证区间的上限
+     * 验证区间的绝对上限
      * @return
      */
     public double MaxOfInterval()
@@ -92,6 +149,31 @@ public class AccuracyFromPatientSample extends BaseVerification
         int m=MeasuringTimes();
         double s=StandardDeviation();
          if(t<0)
+            t=Probability.re_t(m-1,1-FalseRejectionRate);	
+        return format(checkedValue+t*s/Math.sqrt(m));
+    }
+    /**
+     * 验证区间的相对下限
+     * @return
+     */
+    public double RelativeMinOfInterval()
+    {
+        int m=MeasuringTimes();
+        double s=RelativeStandardDeviation();
+        if(t<0)
+            t=Probability.re_t(m-1,1-FalseRejectionRate);	
+        return format(checkedValue-t*s/Math.sqrt(m));
+    }
+    
+    /**
+     * 验证区间的相对上限
+     * @return
+     */
+    public double RelativeMaxOfInterval()
+    {
+        int m=MeasuringTimes();
+        double s=RelativeStandardDeviation();
+        if(t<0)
             t=Probability.re_t(m-1,1-FalseRejectionRate);	
         return format(checkedValue+t*s/Math.sqrt(m));
     }

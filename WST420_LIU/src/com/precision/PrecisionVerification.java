@@ -14,23 +14,49 @@ import com.statistics.Probability;
 public class PrecisionVerification extends BaseVerification {
     double C;	//卡方 分布值    
     double probability=0.975;	//卡方查表概率
+    /**
+     * 假排除率，默认值为5%
+     */
+    public double FalseRejectionRate=0.05;
+    /**
+     * 检测水平，默认值为2
+     */
+    public double DetectionLevel=2;
     
-    public void Set_C(double p)
+    /**
+     * 厂家声称的精密度
+     */
+    public double PrecisionToBeDetected;
+    /**
+     * 厂家声称的变异系数
+     */
+    public double RepeatedVCToBeDetected;
+    /**
+     * 公式5
+     * @param vc，厂家声称的重复变异系数
+     * @param average，厂家测量结果总均值
+     */
+    public void setRepeatedVC(double vc,double average)
     {
-    	probability=p;		
+    	RepeatedVCToBeDetected=vc;
+    	RepeatedVCToBeDetected=vc*average;
     }
+    
     /**
      * 卡方查表参数
      * @param a 假排除率
      * @param l 检测水平数字，直接输入double
      */
-    public void SetFalseRejectionRate(double a,double l)
+    public void setFalseRejectionRate(double a,double l)
     {  
+    	FalseRejectionRate =a;
+    	DetectionLevel=l;
     	probability=1-a/l;
     }
     public PrecisionVerification(double beta)
     {
         super(beta);
+        PrecisionToBeDetected=beta;
         C=-1.0;
     }
     
@@ -76,7 +102,7 @@ public class PrecisionVerification extends BaseVerification {
     }
     
     /**
-     * 期间标准差，最终结果
+     * 期间标准差
      * @return
      */
     public double GroupStandardDeviation()
@@ -100,9 +126,9 @@ public class PrecisionVerification extends BaseVerification {
      */
     public double RepeatPrecisionValue()
     {
-    	double T=v(); 
-        C=Probability.re_chi2((int)T,probability);
-        return format(checkedValue *Math.sqrt(C)/Math.sqrt(T));
+    	double v=v(); 
+        C=Probability.re_chi2((int)v,probability);
+        return format(checkedValue *Math.sqrt(C)/Math.sqrt(v));
     }
     /**
      * 期间精密度的自由度T
@@ -113,7 +139,7 @@ public class PrecisionVerification extends BaseVerification {
     	return Freedom();
     }
     /**
-     * 区间精密度的自由度，对应需求文档中公式9 原文有误!
+     * 区间精密度的自由度，公式9 
      * @return
      */    
     public double Freedom()
@@ -122,7 +148,7 @@ public class PrecisionVerification extends BaseVerification {
         double r=RepeatedStandardDeviation();
         double b=BetweenGroupVariance();
         double d=BatchCount();
-        r=r*r;	//重复标准差需要平方
+        r=r*r;			//重复标准差需要平方
         double T=(m-1)*r+m* b;
         T=T*T;
         double k=(m-1)*r*r/d;
@@ -134,11 +160,11 @@ public class PrecisionVerification extends BaseVerification {
      * 精确度的SDI(Standard Deviation Index)数组
      * @return
      */
-    public double[] sdi()
+    public double[] getSDI()
     {
     	double sd=this.GroupStandardDeviation();
     	double avg=this.GroupAverage();
-    	double result[]=new double[this.BatchCount()*this.MeasuringTimes()];
+    	double[] result=new double[this.BatchCount()*this.MeasuringTimes()];
     	int i=0;
     	for(LabData data : batches)
     	{

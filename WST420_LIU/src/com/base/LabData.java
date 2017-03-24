@@ -110,7 +110,7 @@ public class LabData {
     {
         for(int i=0;i<d.length;i++)
             Add(d[i]);
-    }
+    } 
     
     /**
      * 获取第几个实验数据

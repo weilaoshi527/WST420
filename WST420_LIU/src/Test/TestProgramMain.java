@@ -1,11 +1,14 @@
 package Test;
 
-import com.base.LabData;
-
 import gxinterface.GxLinearService;
 import gxinterface.GxPrecisionService;
 import gxinterface.GxTrueenessPatientSample;
 import gxinterface.GxTrueenessRefMaterial;
+import com.precision.*;
+import com.base.*;
+import com.trueness.*;
+import com.linear.*;
+
 
 /**
  * 测试
@@ -14,10 +17,44 @@ import gxinterface.GxTrueenessRefMaterial;
  */
 public class TestProgramMain 
 {
+	static void PrintBase(BaseVerification pv)
+	{
+		System.out.println("数据之和:\t"+Print4.Print(pv.GetSums(),0));
+        System.out.println("数据均值:\t"+Print4.Print(pv.GetAverages(),3));
+        System.out.println("数据标准差:\t"+Print4.Print(pv.GetStandardDeviations()));
+        System.out.println("批内方差:\t"+Print4.Print(pv.GetIntraGroupVars()));
+        System.out.println("离差平方和:\t"+Print4.Print(pv.GetSumOfSquares()));
+	}
     public static void main(String[] args)
     {			
         System.out.println("***************************精密度GeneXus接口  start ***************************");
         System.out.println("");
+        
+        
+        
+        PrecisionVerification pv=new PrecisionVerification(2.0);
+        pv.DecimalBits=3;	//设置小数位数
+        pv.setFalseRejectionRate(0.05, 2);	//设置假排除率和检测水平
+        pv.FalseRejectionRate=0.05;
+        pv.DetectionLevel=2;
+        pv.SetLabData("140 140 140;138 139 138;143 144 144;143 143 142;142 143 141"); //添加样本数据
+        
+        System.out.println("------精密度实验------");
+        
+        PrintBase(pv);
+        
+        System.out.println(("批间方差:\t" + Print4.Print(pv.BetweenGroupVariance(),4)));
+        System.out.println(("区间自由度:\t" + Print4.Print(pv.T(),2)));
+        System.out.println(("总均值:\t" + Print4.Print(pv.GroupAverage(),2)));
+        System.out.println(("期间标准差:\t" + Print4.Print(pv.GroupStandardDeviation(),4)));
+        System.out.println(("区间验证值:\t" + Print4.Print(pv.PrecisionValue(),2)));
+        System.out.println(("重复标准差:\t" + Print4.Print(pv.RepeatedStandardDeviation(),4)));
+        System.out.println(("重复验证值:\t" + Print4.Print(pv.RepeatPrecisionValue(),2)));
+        System.out.println(("重复自由度:\t" + Print4.Print(pv.v(),2)));        
+        System.out.println("");
+        //System.out.println(pv.GroupStandardDeviation());       
+        
+        /*
         GxPrecisionService gxPrecision = new GxPrecisionService();
         gxPrecision.CreatePrecisionObj("2.0", "2");
         gxPrecision.LoadLabData("140 140 140");
@@ -47,12 +84,28 @@ public class TestProgramMain
         System.out.println("------期间标准差                              ："+gxPrecision.GroupStandardDeviation());
         System.out.println("------自由度                                     ："+gxPrecision.Freedom());
         System.out.println("------验证值                                     ："+gxPrecision.PrecisionValue());
+        */
         System.out.println("");
         System.out.println("***************************精密度GeneXus接口  end ***************************");
         System.out.println("");
         System.out.println("***************************正确度GeneXus接口  start ***************************");
         System.out.println("");
+        
         System.out.println("**** 患者样本 ****");
+        AccuracyFromPatientSample p2=new AccuracyFromPatientSample(2.0);
+        p2.FalseRejectionRate=0.01;
+        p2.Add(new LabData("76 127 256 303 29 345 42 154 398 93 240 72 312 99 375 168 59 183 213 436"));
+        p2.Add(new LabData("77 121 262 294 25 348 41 154 388 92 239 69 308 101 375 162 54 185 204 431"));
+        //PrintBase(p2);
+        System.out.println("绝对偏移:\t"+Print4.Print(p2.AbsoluteOffset()));
+        System.out.println("绝对偏移数组:\t"+Print4.Print(p2.AbsoluteOffsetArray(),0));
+        System.out.println("绝对偏移标准差:\t"+Print4.Print(p2.StandardDeviation(),4));
+        System.out.println("绝对偏移区间:\t["+Print4.Print(p2.MinOfInterval())+"-->"+Print4.Print(p2.MaxOfInterval())+"]");
+        System.out.println("相对偏移:\t"+Print4.Print(p2.RelativeOffset()));
+        System.out.println("相对偏移数组:\t"+Print4.Print(p2.RelativeOffsetArray()));
+        System.out.println("相对偏移标准差:\t"+Print4.Print(p2.RelativeStandardDeviation(),4));
+        System.out.println("相对偏移区间:\t["+Print4.Print(p2.RelativeMinOfInterval())+"-->"+Print4.Print(p2.RelativeMaxOfInterval())+"]");
+        
         GxTrueenessPatientSample gxPatientSample = new GxTrueenessPatientSample();
         gxPatientSample.CreateTrueenessPatientSample("2.0", "2");
         gxPatientSample.LoadLabData("76 127 256 303 29 345 42 154 398 93 240 72 312 99 375 168 59 183 213 436");
@@ -68,7 +121,21 @@ public class TestProgramMain
         System.out.println("------验证区间上限                                                       ："+gxPatientSample.MaxOfInterval(2));
         
         System.out.println("");
+        
         System.out.println("**** 参考物质 ****");
+        AccuracyFromRefMaterial p3=new AccuracyFromRefMaterial();
+        p3.FalseRejectionRate=0.01;
+        p3.XfromRef=40;
+        p3.Sprogram=1.73;
+        p3.LabsCount=135;
+        p3.SetLabData("37 38;39 37;38 36;39 38;38 37");
+        System.out.println("测量偏移值:\t"+Print4.Print(p3.Deviant()));
+        System.out.println("自由度:\t"+Print4.Print(p3.Freedom()));
+        System.out.println("总均值:\t"+Print4.Print(p3.GroupAverage()));
+        System.out.println("标准差:\t"+Print4.Print(p3.StandardDeviation(),4));
+        System.out.println("不确定度:\t"+Print4.Print(p3.Uncertainty(),4));
+        System.out.println("验证区间:\t["+Print4.Print(p3.MinOfInterval())+"-->"+Print4.Print(p3.MaxOfInterval())+"]");
+        /*
         GxTrueenessRefMaterial gxRefMaterial = new GxTrueenessRefMaterial();
         String xfromRef = "40";//参考物质赋值 单位mg/dL,默认值40
         String sprogram = "1.73";//室间质评结果标准差，默认值1.73
@@ -83,7 +150,7 @@ public class TestProgramMain
         gxRefMaterial.LoadLabData("38 37");
         
         batchIndex = 2;
-        dataIndex = 0;
+        int dataIndex = 0;
         System.out.println("------第三批输出：第一次X5之差                ："+gxRefMaterial.GetLabDataEveryResultGroupAverageDiff(batchIndex, dataIndex, 1));
         System.out.println("------第三批输出：第一次X5之差平方         ："+gxRefMaterial.GetMatchPow2(gxRefMaterial.GetLabDataEveryResultGroupAverageDiff(batchIndex, dataIndex, 1),2));
         System.out.println("------总均值                                               ："+gxRefMaterial.GroupAverage(1));
@@ -92,12 +159,22 @@ public class TestProgramMain
         System.out.println("------参考物质测量不确定度                        ："+gxRefMaterial.Uncertainty(3));
         System.out.println("------验证区间下限                                      ："+gxRefMaterial.MinOfInterval(2));
         System.out.println("------验证区间上限                                      ："+gxRefMaterial.MaxOfInterval(2));
+        */
         
         System.out.println("");
         System.out.println("***************************正确度GeneXus接口  end ***************************");
         System.out.println("");
         System.out.println("***************************线性GeneXus接口  start ***************************");
         System.out.println("");
+        
+        LinearRegression l=new LinearRegression();
+        l.DecimalBits=3;        
+        l.SetLabData("4.7 7.8 10.4 13.0 15.5;4.6 7.6 10.2 13.1 15.3");
+        l.SetX(new LabData("1 2 3 4 5"));        
+        System.out.println("方程:\ty="+Print4.Print(l.Slope(),3)+"x+"+Print4.Print(l.Origin(),3));
+        System.out.println("相关系数:\t"+Print4.Print(l.Relation()*l.Relation(),4));
+        
+        /*
         GxLinearService gxLinear = new GxLinearService();
         gxLinear.CreateLinearRegression();
         gxLinear.LoadLabData("4.7 7.8 10.4 13.0 15.5");
@@ -105,6 +182,8 @@ public class TestProgramMain
         gxLinear.LoadX("1 2 3 4 5");
         System.out.println("y="+gxLinear.Slope(3)+"x+ "+gxLinear.Origin(3)+" and R*R is "+gxLinear.GetMatchPow2(gxLinear.Relation(3),4)+" .");
         System.out.println("------稀释度3：均值                ："+gxLinear.GetLabDataTwoResultAverage(2,2));
+        */
+        
         System.out.println("");
         System.out.println("***************************线性GeneXus接口  end ***************************");
     }
