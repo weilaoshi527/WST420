@@ -12,7 +12,8 @@ import com.statistics.Probability;
  *
  */
 public class PrecisionVerification extends BaseVerification {
-    double C;	//卡方 分布值    
+    //double C;	//卡方 分布值    
+    public double C1,C2; //卡方分布的两个值，C1是重复，C2是区间 
     double probability=0.975;	//卡方查表概率
     /**
      * 假排除率，默认值为5%
@@ -51,13 +52,14 @@ public class PrecisionVerification extends BaseVerification {
     {  
     	FalseRejectionRate =a;
     	DetectionLevel=l;
-    	probability=1-a/l;
+    	probability=1-a/l; 
     }
     public PrecisionVerification(double beta)
     {
         super(beta);
         PrecisionToBeDetected=beta;
-        C=-1.0;
+        C1=-1.0;
+        C2=-1.0;
     }
     
     /**
@@ -127,8 +129,8 @@ public class PrecisionVerification extends BaseVerification {
     public double RepeatPrecisionValue()
     {
     	double v=v(); 
-        C=Probability.re_chi2((int)v,probability);
-        return format(checkedValue *Math.sqrt(C)/Math.sqrt(v));
+        C1=Probability.re_chi2((int)v,probability);
+        return format(checkedValue *Math.sqrt(C1)/Math.sqrt(v));
     }
     /**
      * 期间精密度的自由度T
@@ -183,7 +185,7 @@ public class PrecisionVerification extends BaseVerification {
     public double PrecisionValue()
     {
         double T=Freedom();        
-        C=Probability.re_chi2((int)T,probability);
-        return format(checkedValue *Math.sqrt(C)/Math.sqrt(T));
+        C2=Probability.re_chi2((int)T,probability);
+        return format(checkedValue *Math.sqrt(C2)/Math.sqrt(T));
     }
 }
