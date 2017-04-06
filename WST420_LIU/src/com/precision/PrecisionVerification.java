@@ -168,11 +168,11 @@ public class PrecisionVerification extends BaseVerification {
     	double avg=this.GroupAverage();
     	double[] result=new double[this.BatchCount()*this.MeasuringTimes()];
     	int i=0;
-    	for(LabData data : batches)
+    	for(LabData labData : this.batches)
     	{
-    		for(int j=0;j<data.Count();j++)
+    		for(int j=0;j<labData.Count();j++)
     		{
-    			result[i]=format((data.Data(j)-avg)/sd);
+    			result[i]=format((labData.Data(j)-avg)/sd);
     			i=i+1;
     		}
     	}
