@@ -48,7 +48,10 @@ public class BaseVerification {
     {
         return batches.size();
     }
-    
+    public String BatchCount2()
+    {
+    	return Print4.Print(BatchCount());
+    }
     /**
      * 测量次数
      * @return
@@ -59,7 +62,10 @@ public class BaseVerification {
             return batches.get(0).Count();
         return 0;
     }
-    
+    public String MeasuringTimes2()
+    {
+    	return Print4.Print(MeasuringTimes());
+    }
     /**
      * 添加测量数据
      * @param data
@@ -112,7 +118,7 @@ public class BaseVerification {
     	return temp;
     }
     /**
-     * 每组实验数据批内方差
+     * 每组实验数据批内方差平方
      * @return
      */
     public double[] GetIntraGroupVars()
@@ -120,6 +126,17 @@ public class BaseVerification {
     	double[] temp=new double[BatchCount()];
     	for(int i=0;i<temp.length;i++)
     		temp[i]=this.GetLabData(i).IntraGroupVariance();
+    	return temp;
+    }
+    /**
+     * 每组实验数据批内方差
+     * @return
+     */
+    public double[] GetSampleStandardDeviations()
+    {
+    	double[] temp=new double[BatchCount()];
+    	for(int i=0;i<temp.length;i++)
+    		temp[i]=this.GetLabData(i).SampleStandardDeviation();
     	return temp;
     }
     /**
@@ -142,6 +159,17 @@ public class BaseVerification {
     	double[] temp=new double[BatchCount()];
     	for(int i=0;i<temp.length;i++)
     		temp[i]=this.GetLabData(i).SumOfSquares();
+    	return temp;
+    }
+    /**
+     * 每组实验数据变异系数
+     * @return
+     */
+    public double[] GetCV()
+    {
+    	double[] temp=new double[BatchCount()];
+    	for(int i=0;i<temp.length;i++)
+    		temp[i]=this.GetLabData(i).CV();
     	return temp;
     }
 }

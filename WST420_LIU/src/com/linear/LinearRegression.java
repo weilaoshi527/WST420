@@ -2,6 +2,7 @@ package com.linear;
 
 import com.base.BaseVerification;
 import com.base.LabData;
+import com.base.Print4;
 
 /**
  * 线性验证
@@ -72,7 +73,10 @@ public class LinearRegression extends BaseVerification
         return format(sum1/(x.StandardDeviation()*y.StandardDeviation())/m);	
         //return (sum1/(x.StandardDeviation()*y.StandardDeviation())/m);	
     }
-    
+    public String Relation2()
+    {
+    	return Print4.Print(Relation());
+    }
     /**
      * 斜率
      * @return
@@ -94,7 +98,10 @@ public class LinearRegression extends BaseVerification
         return format(sum1/sum2);
         //return (sum1/sum2);
     }
-    
+    public String Slope2()
+    {
+    	return Print4.Print(Slope());
+    }
     /**
      * 截距
      * @return
@@ -105,5 +112,9 @@ public class LinearRegression extends BaseVerification
         LabData y=Y();
         return format(y.Average()-Slope()*x.Average());
         //return y.Average()-Slope()*x.Average();
+    }
+    public String Origin2()
+    {
+    	return Print4.Print(Origin());
     }
 }

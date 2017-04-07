@@ -22,7 +22,8 @@ public class TestProgramMain
 		System.out.println("数据之和:\t"+Print4.Print(pv.GetSums(),0));
         System.out.println("数据均值:\t"+Print4.Print(pv.GetAverages(),3));
         System.out.println("数据标准差:\t"+Print4.Print(pv.GetStandardDeviations()));
-        System.out.println("批内方差:\t"+Print4.Print(pv.GetIntraGroupVars()));
+        System.out.println("批内方差:\t"+Print4.Print(pv.GetSampleStandardDeviations()));
+        System.out.println(("变异系数:\t" + Print4.PrintPercentage(pv.GetCV(),1))); 
         System.out.println("离差平方和:\t"+Print4.Print(pv.GetSumOfSquares()));
 	}
     public static void main(String[] args)
@@ -32,25 +33,31 @@ public class TestProgramMain
         
         
         
-        PrecisionVerification pv=new PrecisionVerification(2.0);
+        //PrecisionVerification pv=new PrecisionVerification(2.0);
+        Precision pv=new Precision(2.0);
         pv.DecimalBits=3;	//设置小数位数
         pv.setFalseRejectionRate(0.05, 2);	//设置假排除率和检测水平
         pv.FalseRejectionRate=0.05;
         pv.DetectionLevel=2;
-        pv.SetLabData("140 140 140;138 139 138;143 144 144;143 143 142;142 143 141"); //添加样本数据
-        
+        //pv.SetLabData("140 140 140;138 139 138;143 144 144;143 143 142;142 143 141"); //添加样本数据
+        //
+        //pv.SetLabData("140 139 138 138 140;140 143 141 143 137;140 138 136 141 136;141 144 142 143 144;139 140 141 138 141"); //Sample A.pdf
+        pv.SetLabData("606 627 621 606 620;612 610 611 595 630;649 626 636 639 648;615 633 605 616 625;622 632 646 619 623");	//Sample B.pdf
         System.out.println("------精密度实验------");
         
         PrintBase(pv);
         
         System.out.println(("批间方差:\t" + Print4.Print(pv.BetweenGroupVariance(),4)));
-        System.out.println(("区间自由度:\t" + Print4.Print(pv.T(),2)));
-        System.out.println(("总均值:\t" + Print4.Print(pv.GroupAverage(),2)));
-        System.out.println(("期间标准差:\t" + Print4.Print(pv.GroupStandardDeviation(),4)));
-        System.out.println(("区间验证值:\t" + Print4.Print(pv.PrecisionValue(),2)));
-        System.out.println(("重复标准差:\t" + Print4.Print(pv.RepeatedStandardDeviation(),4)));
-        System.out.println(("重复验证值:\t" + Print4.Print(pv.RepeatPrecisionValue(),2)));
-        System.out.println(("重复自由度:\t" + Print4.Print(pv.v(),2)));        
+        System.out.println(("批间标准差:\t" + Print4.Print(pv.BetweenGroupSD(),4)));
+        System.out.println(("总均值:\t" + Print4.Print(pv.OverallMean(),2)));
+        System.out.println(("重复自由度:\t" + Print4.Print(pv.DegreeOfFreedom(0),2)));
+        System.out.println(("重复标准差:\t" + Print4.Print(pv.StandardDeviation(0),4)));
+        System.out.println(("重复验证值:\t" + Print4.Print(pv.MeasurementValue(0),2)));
+        System.out.println(("期间自由度:\t" + Print4.Print(pv.DegreeOfFreedom(1),2)));
+        System.out.println(("期间标准差:\t" + Print4.Print(pv.StandardDeviation(1),4)));
+        System.out.println(("期间验证值:\t" + Print4.Print(pv.MeasurementValue(1),2)));    
+        
+        System.out.println(("SDI参数:\t" + Print4.Print(pv.getSDI(),2)));   
         System.out.println("");
         //System.out.println(pv.GroupStandardDeviation());       
         

@@ -2,6 +2,7 @@ package com.trueness;
 
 import com.base.BaseVerification;
 import com.base.LabData;
+import com.base.Print4;
 import com.statistics.Probability;
 
 /**
@@ -82,6 +83,10 @@ public class AccuracyFromPatientSample extends BaseVerification
             sum+=array[i];
         return format(sum/array.length);
     }
+    public String AbsoluteOffset2()
+    {
+    	return Print4.Print(AbsoluteOffset());
+    }
     /**
      * 两个方法间的相对偏移
      * @return
@@ -94,6 +99,10 @@ public class AccuracyFromPatientSample extends BaseVerification
         for(int i=0;i<array.length;i++)
             sum+=array[i];
         return format(sum/array.length);
+    }
+    public String RelativeOffset2()
+    {
+    	return Print4.Print(RelativeOffset());
     }
     /**
      * 绝对偏移的标准差
@@ -111,6 +120,10 @@ public class AccuracyFromPatientSample extends BaseVerification
         }
         return format2(Math.sqrt(sum/(m-1)));
     }
+    public String StandardDeviation2()
+    {
+    	return Print4.Print(StandardDeviation());
+    }
     /**
      * 相对偏移的标准差
      * @return
@@ -127,6 +140,10 @@ public class AccuracyFromPatientSample extends BaseVerification
         }
         return format2(Math.sqrt(sum/(m-1)));
     }
+    public String RelativeStandardDeviation2()
+    {
+    	return Print4.Print(RelativeStandardDeviation());
+    }
     /**
      * 验证区间的绝对下限
      * @return
@@ -139,7 +156,10 @@ public class AccuracyFromPatientSample extends BaseVerification
             t=Probability.re_t(m-1,1-FalseRejectionRate);	
         return format(checkedValue-t*s/Math.sqrt(m));
     }
-    
+    public String MinOfInterval2()
+    {
+    	return Print4.Print(MinOfInterval());
+    }
     /**
      * 验证区间的绝对上限
      * @return
@@ -151,6 +171,10 @@ public class AccuracyFromPatientSample extends BaseVerification
          if(t<0)
             t=Probability.re_t(m-1,1-FalseRejectionRate);	
         return format(checkedValue+t*s/Math.sqrt(m));
+    }
+    public String MaxOfInterval2()
+    {
+    	return Print4.Print(MaxOfInterval());
     }
     /**
      * 验证区间的相对下限
@@ -164,7 +188,10 @@ public class AccuracyFromPatientSample extends BaseVerification
             t=Probability.re_t(m-1,1-FalseRejectionRate);	
         return format(checkedValue-t*s/Math.sqrt(m));
     }
-    
+    public String RelativeMinOfInterval2()
+    {
+    	return Print4.Print(RelativeMinOfInterval());
+    }
     /**
      * 验证区间的相对上限
      * @return
@@ -176,5 +203,9 @@ public class AccuracyFromPatientSample extends BaseVerification
         if(t<0)
             t=Probability.re_t(m-1,1-FalseRejectionRate);	
         return format(checkedValue+t*s/Math.sqrt(m));
+    }
+    public String RelativeMaxOfInterval2()
+    {
+    	return Print4.Print(RelativeMaxOfInterval());
     }
 }

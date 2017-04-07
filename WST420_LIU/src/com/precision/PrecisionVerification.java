@@ -61,7 +61,22 @@ public class PrecisionVerification extends BaseVerification {
         C1=-1.0;
         C2=-1.0;
     }
-    
+    /**
+     * 期间标准差
+     * @return
+     */
+    public double IntervalStandardDeviation()
+    {
+    	return this.GroupStandardDeviation();
+    }
+    /**
+     * 期间方差     
+     * @return
+     */
+    public double IntervalStandardVariance()
+    {    	
+        return format2(this.IntervalStandardDeviation()*this.IntervalStandardDeviation());
+    }
     /**
      * 重复标准差
      * @return
@@ -102,7 +117,14 @@ public class PrecisionVerification extends BaseVerification {
         }
         return format2(sum/(BatchCount()-1));
     }
-    
+    /**
+     * 批间标准差
+     * @return
+     */
+    public double BetweenGroupSD()
+    {
+    	return format2(Math.sqrt(BetweenGroupVariance()));
+    }
     /**
      * 期间标准差
      * @return
@@ -164,7 +186,8 @@ public class PrecisionVerification extends BaseVerification {
      */
     public double[] getSDI()
     {
-    	double sd=this.GroupStandardDeviation();
+    	//double sd=this.GroupStandardDeviation();
+    	double sd=this.IntervalStandardDeviation();
     	double avg=this.GroupAverage();
     	double[] result=new double[this.BatchCount()*this.MeasuringTimes()];
     	int i=0;
@@ -172,7 +195,11 @@ public class PrecisionVerification extends BaseVerification {
     	{
     		for(int j=0;j<labData.Count();j++)
     		{
-    			result[i]=format((labData.Data(j)-avg)/sd);
+    			double di=labData.Data(j);
+    			double avgi=avg;
+    			double sdi=this.GroupStandardDeviation();
+    			//result[i]=format((labData.Data(j)-avg)/sd);
+    			result[i]=format((di-avgi)/sdi);
     			i=i+1;
     		}
     	}

@@ -2,6 +2,7 @@ package com.trueness;
 
 import com.base.BaseVerification;
 import com.base.LabData;
+import com.base.Print4;
 import com.statistics.Probability;
 
 /**
@@ -62,7 +63,10 @@ public class AccuracyFromRefMaterial extends BaseVerification
     {
         return format(GroupAverage()-XfromRef);
     }
-    
+    public String Deviant2()
+    {
+    	return Print4.Print(Deviant());
+    }
     /**
      * 标准差
      * @return
@@ -76,7 +80,10 @@ public class AccuracyFromRefMaterial extends BaseVerification
                 sum+=(data.Data(i)-ave)*(data.Data(i)-ave);
         return format2(Math.sqrt(sum/(MeasuringTimes()*BatchCount()-1)));
     }
-    
+    public String StandardDeviation2()
+    {
+    	return Print4.Print(StandardDeviation());
+    }
     /**
      * 参考物质测量标准不确定度
      * @return
@@ -85,7 +92,10 @@ public class AccuracyFromRefMaterial extends BaseVerification
     {
          return format(Sprogram/Math.sqrt(LabsCount));
     }
-    
+    public String Uncertainty2()
+    {
+    	return Print4.Print(Uncertainty());
+    }
     /**
      * 自由度，对应公式24,原文有误!
      * @return
@@ -94,7 +104,10 @@ public class AccuracyFromRefMaterial extends BaseVerification
     {
         return MeasuringTimes()*BatchCount() -1;
     }
-    
+    public String Freedom2()
+    {
+    	return Print4.Print(Freedom());
+    }
     /**
      * 验证区间的下限
      * @return
@@ -107,7 +120,10 @@ public class AccuracyFromRefMaterial extends BaseVerification
         double u=Uncertainty();
         return format(GroupAverage()-t*Math.sqrt(s*s +u *u));
     }
-    
+    public String MinOfInterval2()
+    {
+    	return Print4.Print(MinOfInterval());
+    }
     /**
      * 验证区间的上限
      * @return
@@ -119,5 +135,9 @@ public class AccuracyFromRefMaterial extends BaseVerification
         double s=StandardDeviation();
         double u=Uncertainty();
         return format(GroupAverage()+t*Math.sqrt(s*s +u *u));
+    }
+    public String MaxOfInterval2()
+    {
+    	return Print4.Print(MaxOfInterval());
     }
 }
