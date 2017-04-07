@@ -21,7 +21,7 @@ public class TestProgramMain
 	{
 		System.out.println("数据之和:\t"+Print4.Print(pv.GetSums(),0));
         System.out.println("数据均值:\t"+Print4.Print(pv.GetAverages(),3));
-        System.out.println("数据标准差:\t"+Print4.Print(pv.GetStandardDeviations()));
+        System.out.println("数据标准差:\t"+Print4.Print(pv.GetStandardDeviations(),4));
         System.out.println("批内方差:\t"+Print4.Print(pv.GetSampleStandardDeviations()));
         System.out.println(("变异系数:\t" + Print4.PrintPercentage(pv.GetCV(),1))); 
         System.out.println("离差平方和:\t"+Print4.Print(pv.GetSumOfSquares()));
@@ -47,7 +47,7 @@ public class TestProgramMain
         
         PrintBase(pv);
         
-        System.out.println(("批间方差:\t" + Print4.Print(pv.BetweenGroupVariance(),4)));
+        System.out.println(("批间方差:\t" + pv.BetweenGroupVariance2()));
         System.out.println(("批间标准差:\t" + Print4.Print(pv.BetweenGroupSD(),4)));
         System.out.println(("总均值:\t" + Print4.Print(pv.OverallMean(),2)));
         System.out.println(("重复自由度:\t" + Print4.Print(pv.DegreeOfFreedom(0),2)));
