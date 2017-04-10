@@ -54,10 +54,18 @@ public class PrecisionVerification extends BaseVerification {
     	DetectionLevel=l;
     	probability=1-a/l; 
     }
+    /*
     public PrecisionVerification(double beta)
     {
         super(beta);
         PrecisionToBeDetected=beta;
+        C1=-1.0;
+        C2=-1.0;
+    }
+    */
+    public PrecisionVerification()
+    {
+    	super();        
         C1=-1.0;
         C2=-1.0;
     }

@@ -30,7 +30,9 @@ public class AccuracyFromRefMaterial extends BaseVerification
     public double FalseRejectionRate;	
 
     double t;				//t分布值
-
+    /**
+     * 参考物质实验的初始化
+     */
     public AccuracyFromRefMaterial()
     {
         super();

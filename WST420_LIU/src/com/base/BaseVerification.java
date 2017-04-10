@@ -18,13 +18,27 @@ public class BaseVerification {
      */
     public int DecimalBits; 
     
-    
+    /*
     public BaseVerification(double beta)
     {
             batches=new ArrayList<LabData>();
             checkedValue=beta;
             DecimalBits=-1;
-    }     
+    }    
+    */
+    public BaseVerification()	
+    {
+    	batches=new ArrayList<LabData>();        
+        DecimalBits=-1;
+    }
+    /**
+     * 设置厂家声称的校验值
+     * @param beta
+     */
+    public void SetCheckedValue(double beta)
+    {
+    	checkedValue=beta;
+    }
     protected double format(double d)
     {
     	return LabData.Format45(d,DecimalBits);
@@ -32,14 +46,48 @@ public class BaseVerification {
     protected double format2(double d)
     {
     	return LabData.Format452(d,DecimalBits);
-    }
-    public BaseVerification()
+    }   
+    /**
+     * 批间标准差
+     * @return
+     */
+    public double BetweenGroupSD()
     {
-          batches=new ArrayList<LabData>();
-          DecimalBits=-1;
+    	return format2(Math.sqrt(BetweenGroupVariance()));
     }
-    
-    
+    public String BetweenGroupSD2()
+    {
+    	return Print4.Print(BetweenGroupSD());
+    }
+    /**
+     * 批间方差
+     * @return
+     */
+    public double BetweenGroupVariance()
+    {
+        double sum=0;
+        for(LabData d : batches)
+        {
+            double ave=d.Average()-this.OverallMean();
+            sum+=ave*ave;
+        }
+        return format2(sum/(BatchCount()-1));
+    }
+    public String BetweenGroupVariance2()
+    {
+    	return Print4.Print(BetweenGroupVariance());
+    }
+    /**
+     * 总均值
+     * @return
+     */
+    public double OverallMean()
+    {
+        double sum=0;
+        for(LabData d : batches)
+            sum+=d.Average();
+        return format(sum/BatchCount());
+    }
     /**
      * 批次总数
      * @return
@@ -83,7 +131,7 @@ public class BaseVerification {
     {
     	String[] labDataStr=dataStr.split(";");        
         for(int i=0;i<labDataStr.length;i++)
-            Add(new LabData(labDataStr[i]));        
+            Add(LabData.CreateByStr(labDataStr[i]));        
     }
     
     /**
@@ -107,15 +155,53 @@ public class BaseVerification {
     	return temp;
     }
     /**
+     * 获取指定组的SDI参数组
+     * @param 第i组
+     * @return
+     */
+    public double[] GetSDIs(int i)
+    {
+    	double[] result=new double[this.MeasuringTimes()];
+    	for(LabData labData : this.batches)
+    	{
+    		for(int j=0;j<labData.Count();j++)
+    		{    			
+    			result[j]=GetSDI(i,j);    			
+    		}
+    	}
+    	return result;
+    }
+    /**
+     * 获取指定数据的SDI值
+     * @param i 第i批数据
+     * @param j 第j个数据
+     * @return SDI值 
+     */
+    public double GetSDI(int i,int j)
+    {
+    	double sd=this.BetweenGroupSD();
+    	double avg=this.OverallMean();    	
+    	return format((this.batches.get(i).Data(j)-avg)/sd);
+    }
+    /**
      * 每组实验数据均值
      * @return
      */
-    public double[] GetAverages()
+    public double[] GetMeans()
     {
     	double[] temp=new double[BatchCount()];
     	for(int i=0;i<temp.length;i++)
-    		temp[i]=this.GetLabData(i).Average();
+    		temp[i]=GetMean(i);
     	return temp;
+    }
+    /**
+     * 获取制定组数据的均值
+     * @param i 组的序列号
+     * @return 均值
+     */
+    public double GetMean(int i)
+    {    	    	
+    	return this.GetLabData(i).Average();
     }
     /**
      * 每组实验数据批内方差平方
@@ -129,7 +215,16 @@ public class BaseVerification {
     	return temp;
     }
     /**
-     * 每组实验数据批内方差
+     * 获取指定数据组的批内方差
+     * @param i
+     * @return
+     */
+    public double GetIntraGroupVar(int i)
+    {
+    	return this.GetLabData(i).IntraGroupVariance();
+    }
+    /**
+     * 每组实验数据批内标准差
      * @return
      */
     public double[] GetSampleStandardDeviations()
@@ -138,6 +233,15 @@ public class BaseVerification {
     	for(int i=0;i<temp.length;i++)
     		temp[i]=this.GetLabData(i).SampleStandardDeviation();
     	return temp;
+    }
+    /**
+     * 获取指定组的样本标准差
+     * @param i
+     * @return
+     */
+    public double GetSampleStandarDeviation(int i)
+    {
+    	return this.GetLabData(i).SampleStandardDeviation();
     }
     /**
      * 每组实验数据标准差
@@ -162,14 +266,98 @@ public class BaseVerification {
     	return temp;
     }
     /**
+     * 获取指定组的离差平方和
+     * @param i
+     * @return
+     */
+    public double GetSumOfSquare(int i)
+    {
+    	return this.GetLabData(i).SumOfSquares();
+    }
+    /**
      * 每组实验数据变异系数
      * @return
      */
-    public double[] GetCV()
+    public double[] GetCVs()
     {
     	double[] temp=new double[BatchCount()];
     	for(int i=0;i<temp.length;i++)
     		temp[i]=this.GetLabData(i).CV();
     	return temp;
+    }
+    public double GetCV(int i)
+    {
+    	return this.GetLabData(i).CV();
+    }
+    /**
+     * 每组实验数据的均值与总均值的差
+     * @param i
+     * @return
+     */
+    public double SubtractOverallMean(int i)
+    {
+    	return format(this.GetLabData(i).Average()-this.OverallMean());
+    }
+    public double[] SubtractOverallMeans()
+    {
+    	double[] r=new double[this.BatchCount()];
+    	for(int i=0;i<r.length;i++)
+    	{
+    		r[i]=this.SubtractOverallMean(i);
+    	}
+    	return r;
+    }
+    /**
+     * 每组实验数据的均值与总均值的差的平方
+     * @param i
+     * @return
+     */
+    public double SubtractOverallMeanSquare(int i)
+    {
+    	double d=this.SubtractOverallMean(i);
+    	return format2(d*d);
+    }
+    public double[] SubtractOverallMeanSquares()
+    {
+    	double[] r=new double[this.BatchCount()];
+    	for(int i=0;i<r.length;i++)
+    	{
+    		r[i]=this.SubtractOverallMeanSquare(i);
+    	}
+    	return r;
+    }
+    /**
+     * 获取每个数据减去其组内均值的差
+     * @param i 第i组
+     * @param j 第j个
+     * @return 与改组均值之差
+     */
+    public double SubtractMean(int i,int j)
+    {
+    	return this.batches.get(i).SubtractMean(j);
+    }
+    public double[] SubtractMeans(int i)
+    {
+    	double[] r=new double[this.MeasuringTimes()];
+    	for(int j=0;j<r.length;j++)
+    		r[j]=this.SubtractMean(i, j);
+    	return r;
+    }
+    /**
+     * 获取每个数据减去其组内均值的差平方
+     * @param i 第i组
+     * @param j 第j个
+     * @return 与改组均值之差的平方
+     */
+    public double SubtractMeanSquare(int i,int j)
+    {
+    	return this.batches.get(i).SubtractMeanSquare(j);
+    }
+    public double[] SubtractMeanSquares(int i)
+    {
+    	double[] r=new double[this.MeasuringTimes()];
+    	for(int j=0;j<r.length;j++)
+    		r[j]=this.SubtractMeanSquare(i, j);
+    	return r;
     }
 }

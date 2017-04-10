@@ -32,7 +32,7 @@ public class LabData {
     	if(bits>-1)
     	{
 	    	BigDecimal bg = new BigDecimal(d);  
-	        return bg.setScale(bits*bits, BigDecimal.ROUND_HALF_UP).doubleValue();  
+	        return bg.setScale(bits*2, BigDecimal.ROUND_HALF_UP).doubleValue();  
 	    	}
     	return d;
     }
@@ -65,7 +65,7 @@ public class LabData {
     			k=k/10.0;
     		}
 	    	BigDecimal bg = new BigDecimal(d+k);
-	        return bg.setScale(bits*bits, BigDecimal.ROUND_HALF_UP).doubleValue();  
+	        return bg.setScale(bits*2, BigDecimal.ROUND_HALF_UP).doubleValue();  
 	    	}
     	return d;
     }
@@ -74,11 +74,7 @@ public class LabData {
             data=new double[0];
     }
     
-    /**
-     * 构造函数
-     * @param dataStr，用空格隔开的浮点实验数据字符串
-     * @throws Exception 
-     */
+    /*
     public LabData(String dataStr)
     {        	
         String[] d=dataStr.split(" ");
@@ -86,7 +82,26 @@ public class LabData {
         for(int i=0;i<d.length;i++)
             data[i]=Double.parseDouble(d[i]);
     }
-    
+    */
+    /**
+     * 设置用空格隔开的实验数据
+     * @param dataStr
+     */
+    public void SetData(String dataStr)
+    {
+    	String[] d=dataStr.split(" ");
+        data=new double[d.length];
+        for(int i=0;i<d.length;i++)
+            data[i]=Double.parseDouble(d[i]);
+    }
+    public static LabData CreateByStr(String dataStr)
+    {
+    	LabData lab=new LabData();
+    	String[] d=dataStr.split(" ");        
+        for(int i=0;i<d.length;i++)
+            lab.Add(Double.parseDouble(d[i]));
+        return lab;
+    }
     /**
      * 添加一个实验数据
      * @param d
@@ -163,6 +178,25 @@ public class LabData {
     	return Print4.Print(Average());
     }
     /**
+     * 每个数据减去均值
+     * @param i
+     * @return
+     */
+    public double SubtractMean(int i)
+    {
+    	return LabData.Format45(data[i]-this.Average(),DecimalBits);
+    }
+    /**
+     * 每个数据减去均值后的平方
+     * @param i
+     * @return
+     */
+    public double SubtractMeanSquare(int i)
+    {
+    	double d=this.SubtractMean(i);
+    	return LabData.Format452(d*d,DecimalBits);
+    }
+    /**
      * 离差平方和
      * @return
      */
@@ -204,6 +238,7 @@ public class LabData {
     {
     	return Print4.Print(IntraGroupVariance());
     }
+    
     /**
      * 样本标准差
      * @return
