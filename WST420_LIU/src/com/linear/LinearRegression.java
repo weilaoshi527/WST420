@@ -23,6 +23,23 @@ public class LinearRegression extends BaseVerification
         origin=slope;
     }
     /**
+     * 一次性设置好所有数据
+     * @param dataStr 形如4.7 7.8 10.4 13.0 15.5;4.6 7.6 10.2 13.1 15.3
+     */
+    public void SetLabData(String dataStr)
+    {
+    	super.SetLabData(dataStr);
+    }
+    /**
+     * 预保留的小数位数
+     * @param bits
+     */
+    public void SetDecimalBits(int bits)
+    {
+    	super.DecimalBits=bits;
+    }
+    
+    /**
      * 设置X数据
      * @param x
      */
@@ -30,6 +47,28 @@ public class LinearRegression extends BaseVerification
     {
     	X=x;
     	x.DecimalBits=this.DecimalBits;
+    }
+    public void SetXByStr(String xStr)
+    {
+    	this.SetX(LabData.CreateByStr(xStr));
+    }
+    /**
+     * 获取第几批第几个数据
+     * @param batchIndex
+     * @param dataIndex
+     * @return
+     */
+    public double GetLabDataByString(int batchIndex,int dataIndex)
+    {
+    	return super.GetLabData(batchIndex).Data(dataIndex);
+    }
+    /**
+     * 批次总数
+     * @return
+     */
+    public int MeasuringTimes()
+    {
+        return super.MeasuringTimes();
     }
     /**
      * 线性数据X
@@ -59,6 +98,15 @@ public class LinearRegression extends BaseVerification
         return y;
     }
     /**
+     * 指定序号的Y均值
+     * @param i
+     * @return
+     */
+    public double averageY(int i)
+    {
+    	return this.Y().Data(i);
+    }
+    /**
      * Y的理论值
      * @return
      */
@@ -83,17 +131,7 @@ public class LinearRegression extends BaseVerification
     {
     	return this.TheoreticalY().Data(i);
     }
-    /**
-     * Y理论值数组
-     * @return
-     */
-    public double[] TheoreticalYs()
-    {
-    	double[] ds=new double[this.MeasuringTimes()];
-    	for(int i=0;i<ds.length;i++)
-    		ds[i]=this.TheoreticalY(i);
-    	return ds;
-    }
+
     /**
      * 相关系数，与原文略有不同，为什么？
      * @return
@@ -175,5 +213,55 @@ public class LinearRegression extends BaseVerification
     public String Origin2()
     {
     	return Print4.Print(Origin());
-    }    
+    }
+    public String Graph(double concentration,double percent,double maxX,double maxY)
+    {
+    	String lineString="";
+    	return lineString;
+    } 
+    public String Line1(double x,double y)
+    {
+    	String line="0,"+String.valueOf(this.Origin());
+    	line+=" "+linePoint(this.Slope(),this.Origin(),x,y);
+    	return line;
+    }
+    public String Line2(double concentration,double percent,double x,double y)
+    {
+    	double a=this.Slope();
+    	double b=this.Origin();
+    	double c=concentration;
+    	double p=percent;
+    	double x0=(b+c)/p;
+    	double y0=(b+c)*(a+p)/p;
+    	String line="0,"+String.valueOf(this.Origin());
+    	line+=" "+String.valueOf(x0)+","+String.valueOf(y0);
+    	return line;
+    }
+    public String Line3(double concentration,double percent,double x,double y)
+    {
+    	double a=this.Slope();
+    	double b=this.Origin();
+    	double c=concentration;
+    	double p=percent;
+    	double x0=(b-c)/p;
+    	double y0=(b-c)*(a-p)/p;
+    	String line="0,"+String.valueOf(this.Origin());
+    	line+=" "+String.valueOf(x0)+","+String.valueOf(y0);
+    	return line;
+    }
+    String linePoint(double a,double b,double x,double y)
+    {
+    	String str="";
+    	double x0=(y-b)/a;
+    	double y0=a*x+b;
+    	if(y0<y)
+    	{
+    		str=String.valueOf(x)+","+String.valueOf(y0);
+    	}
+    	else
+    	{
+    		str=String.valueOf(x0)+","+String.valueOf(y);
+    	}
+    	return str;
+    }
 }
