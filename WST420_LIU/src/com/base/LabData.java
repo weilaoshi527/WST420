@@ -145,10 +145,6 @@ public class LabData {
     {
         return data.length;
     }
-    public String Count2()
-    {
-    	return Print4.Print(Count());
-    }
     /**
      * 获取这一批实验数据总和
      * @return
@@ -161,10 +157,6 @@ public class LabData {
         return LabData.Format45(sum,DecimalBits);
         
     }
-    public String Sum2()
-    {
-    	return Print4.Print(Sum());
-    }
     /**
      * 获取这一批实验数据平均值
      * @return
@@ -172,10 +164,6 @@ public class LabData {
     public double Average()
     {
          return LabData.Format45(Sum()/Count(),DecimalBits);
-    }
-    public String Average2()
-    {
-    	return Print4.Print(Average());
     }
     /**
      * 每个数据减去均值
@@ -210,10 +198,6 @@ public class LabData {
         }
         return LabData.Format452(sum,DecimalBits);       
     }
-    public String SumOfSquares2()
-    {
-    	return Print4.Print(SumOfSquares());
-    }
     /**
      * 标准方差
      * @return
@@ -222,10 +206,6 @@ public class LabData {
     {
         return LabData.Format452(Math.sqrt(SumOfSquares()/data.length),DecimalBits);
     }
-    public String StandardDeviation2()
-    {
-    	return Print4.Print(StandardDeviation());
-    }
     /**
      * 批内方差
      * @return
@@ -233,12 +213,7 @@ public class LabData {
     public double  IntraGroupVariance()
     {
         return LabData.Format452(SumOfSquares()/(data.length-1),DecimalBits);
-    }
-    public String IntraGroupVariance2()
-    {
-    	return Print4.Print(IntraGroupVariance());
-    }
-    
+    }    
     /**
      * 样本标准差
      * @return
@@ -246,10 +221,6 @@ public class LabData {
     public double SampleStandardDeviation()
     {
     	return LabData.Format452(Math.sqrt(this.IntraGroupVariance()),DecimalBits);
-    }
-    public String SampleStandardDeviation2()
-    {
-    	return Print4.Print(SampleStandardDeviation());
     }
     /**
      * 总体标准差
@@ -259,10 +230,6 @@ public class LabData {
     {
     	return this.StandardDeviation();
     }
-    public String OverallStandardDeviation2()
-    {
-    	return Print4.Print(OverallStandardDeviation());
-    }
     /**
      * 变异系数，SD/AV*100%
      * @return
@@ -271,10 +238,6 @@ public class LabData {
     {
     	return LabData.Format452(SampleStandardDeviation()/Average(),DecimalBits);
     }
-    public String VariationCoefficient2()
-    {
-    	return Print4.Print(VariationCoefficient());
-    }
     /**
      * 变异系数
      * @return
@@ -282,9 +245,5 @@ public class LabData {
     public double CV()
     {
     	return this.VariationCoefficient();
-    }
-    public String CV2()
-    {
-    	return Print4.Print(CV());
     }
 }

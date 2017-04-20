@@ -191,10 +191,6 @@ public class AccuracyFromRefMaterial extends BaseVerification
     {
         return format(GroupAverage()-XfromRef);
     }
-    public String Deviant2()
-    {
-    	return Print4.Print(Deviant());
-    }
     /**
      * 标准差
      * @return
@@ -219,10 +215,6 @@ public class AccuracyFromRefMaterial extends BaseVerification
     public int Freedom()
     {
         return MeasuringTimes()*BatchCount() -1;
-    }
-    public String Freedom2()
-    {
-    	return Print4.Print(Freedom());
     }
     /**
      * 验证区间的下限

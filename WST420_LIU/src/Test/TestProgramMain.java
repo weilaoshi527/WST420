@@ -19,7 +19,7 @@ public class TestProgramMain
 		//实际GeneXus调用：数据之和
 		for(int i=0;i<pv.BatchCount();i++)
         {
-			tempStr += " " + Print4.Print(pv.GetLabDataSum(i),0);
+			tempStr += " " + Print4.PrintNoZero(pv.GetLabDataSum(i),0);
         }
 		System.out.println("数据之和:\t\t"+tempStr);
 		
@@ -27,7 +27,7 @@ public class TestProgramMain
 		tempStr = "";
 		for(int i=0;i<pv.BatchCount();i++)
         {
-			tempStr += " " + Print4.Print(pv.GetLabDataAverage(i),3);
+			tempStr += " " + Print4.PrintNoZero(pv.GetLabDataAverage(i),3);
         }
         System.out.println("数据均值:\t\t"+tempStr);
         
@@ -35,7 +35,7 @@ public class TestProgramMain
         tempStr = "";
 		for(int i=0;i<pv.BatchCount();i++)
         {
-			tempStr += " " + Print4.Print(pv.GetLabDataStandardDeviation(i),4);
+			tempStr += " " + Print4.PrintNoZero(pv.GetLabDataStandardDeviation(i),4);
         }
         System.out.println("数标准差:\t\t"+tempStr);
         
@@ -70,7 +70,7 @@ public class TestProgramMain
         	tempStr = "";
         	for(int j=0;j<pv.MeasuringTimes();j++)
             {
-        		tempStr += Print4.Print(pv.GetLabDataSubtractMean(i,j),2)+"\t";
+        		tempStr += Print4.PrintNoZero(pv.GetLabDataSubtractMean(i,j),2)+"\t";
             }
         	System.out.println("第"+String.valueOf(i)+"批与均值之差:\t\t"+tempStr);
         }
@@ -82,7 +82,7 @@ public class TestProgramMain
         	tempStr = "";
         	for(int j=0;j<pv.MeasuringTimes();j++)
             {
-        		tempStr += Print4.Print(pv.GetLabDataSubtractMeanSquare(i,j),4)+"\t";
+        		tempStr += Print4.PrintNoZero(pv.GetLabDataSubtractMeanSquare(i,j),4)+"\t";
             }
         	System.out.println("第"+String.valueOf(i)+"批与均值之差平方:\t\t"+tempStr);
         }
@@ -90,14 +90,14 @@ public class TestProgramMain
         tempStr = "";
         for(int i=0;i<pv.BatchCount();i++)
         {
-        	tempStr+=" "+Print4.Print(pv.GetLabDataSubtractOverallMean(i),2);
+        	tempStr+=" "+Print4.PrintNoZero(pv.GetLabDataSubtractOverallMean(i),2);
         }
         System.out.println("与总均值之差:\t\t"+tempStr);
         //实际GeneXus调用：与总均值之差平方
         tempStr = "";
         for(int i=0;i<pv.BatchCount();i++)
         {
-        	tempStr+=" "+Print4.Print(pv.GetLabDataSubtractOverallMeanSquare(i),4);
+        	tempStr+=" "+Print4.PrintNoZero(pv.GetLabDataSubtractOverallMeanSquare(i),4);
         }
         System.out.println("与总均值之差的平方:\t\t"+tempStr);
 	}
@@ -119,21 +119,21 @@ public class TestProgramMain
         PrintBase(pv);
         
         System.out.println("批间方差:\t" + Print4.Print(pv.BetweenGroupVariance()));
-        System.out.println(("批间标准差:\t" + Print4.Print(pv.BetweenGroupSD(),4)));
-        System.out.println(("总均值:\t" + Print4.Print(pv.OverallMean(),2)));
-        System.out.println(("重复自由度:\t" + Print4.Print(pv.DegreeOfFreedom(0),2)));
-        System.out.println(("重复C点:\t" + Print4.Print(pv.C(0),2)));
-        System.out.println(("重复方差:\t" + Print4.Print(pv.Variance(0),4)));
-        System.out.println(("重复标准差:\t" + Print4.Print(pv.StandardDeviation(0),2)));
+        System.out.println(("批间标准差:\t" + Print4.PrintNoZero(pv.BetweenGroupSD(),4)));
+        System.out.println(("总均值:\t" + Print4.PrintNoZero(pv.OverallMean(),2)));
+        System.out.println(("重复自由度:\t" + Print4.PrintNoZero(pv.DegreeOfFreedom(0),2)));
+        System.out.println(("重复C点:\t" + Print4.PrintNoZero(pv.C(0),2)));
+        System.out.println(("重复方差:\t" + Print4.PrintNoZero(pv.Variance(0),4)));
+        System.out.println(("重复标准差:\t" + Print4.PrintHaveZero(pv.StandardDeviation(0),2)));
         pv.SetCheckedValue(2.0);
         //pv.SetProbability(0.95);
-        System.out.println(("重复验证值:\t" + Print4.Print(pv.MeasurementValue(0),2)));
-        System.out.println(("期间自由度:\t" + Print4.Print(pv.DegreeOfFreedom(1),2)));
-        System.out.println(("期间方差:\t" + Print4.Print(pv.Variance(1),4)));
-        System.out.println(("期间标准差:\t" + Print4.Print(pv.StandardDeviation(1),2)));
-        System.out.println(("期间C点:\t" + Print4.Print(pv.C(1),2)));
+        System.out.println(("重复验证值:\t" + Print4.PrintHaveZero(pv.MeasurementValue(0),2)));
+        System.out.println(("期间自由度:\t" + Print4.PrintNoZero(pv.DegreeOfFreedom(1),2)));
+        System.out.println(("期间方差:\t" + Print4.PrintNoZero(pv.Variance(1),4)));
+        System.out.println(("期间标准差:\t" + Print4.PrintHaveZero(pv.StandardDeviation(1),2)));
+        System.out.println(("期间C点:\t" + Print4.PrintNoZero(pv.C(1),2)));
         //pv.SetCheckedValue(3.5);
-        System.out.println(("期间验证值:\t" + Print4.Print(pv.MeasurementValue(1),2)));    
+        System.out.println(("期间验证值:\t" + Print4.PrintHaveZero(pv.MeasurementValue(1),2)));    
         String sdiStr="";
         for(int i=0;i<pv.BatchCount();i++)
         {
@@ -150,7 +150,7 @@ public class TestProgramMain
         {
         	for(int j=0;j<pv.MeasuringTimes();j++)
             {
-        		sdiStr += Print4.Print(pv.GetLabDataByString(i,j),0)+"\t";
+        		sdiStr += Print4.PrintNoZero(pv.GetLabDataByString(i,j),0)+"\t";
             }
         	sdiStr +="\n";
         }
@@ -179,49 +179,49 @@ public class TestProgramMain
         tempArr = "";
         for(int i =0; i < p2.MeasuringTimes(); i++)
         {
-        	tempArr +=" "+  Print4.Print(p2.AbsoluteOffsetArray(i),0);
+        	tempArr +=" "+  Print4.PrintNoZero(p2.AbsoluteOffsetArray(i),0);
         }
         System.out.println("绝对偏移数组:\t"+tempArr);
         //绝对偏移数组与绝对偏移之差
         tempArr = "";
         for(int i =0; i < p2.MeasuringTimes(); i++)
         {
-        	tempArr +=" "+  Print4.Print(p2.RelativeOffsetArraySubtract(i),2);
+        	tempArr +=" "+  Print4.PrintNoZero(p2.RelativeOffsetArraySubtract(i),2);
         }
         System.out.println("绝对偏移数组与绝对偏移之差:\t"+tempArr);
         //绝对偏移数组与绝对偏移之差平方
         tempArr = "";
         for(int i =0; i < p2.MeasuringTimes(); i++)
         {
-        	tempArr +=" "+  Print4.Print(p2.RelativeOffsetArraySubtractSquare(i),2);
+        	tempArr +=" "+  Print4.PrintNoZero(p2.RelativeOffsetArraySubtractSquare(i),2);
         }
         System.out.println("绝对偏移数组与绝对偏移之差平方:\t"+tempArr);
-        System.out.println("绝对偏移标准差:\t"+Print4.Print(p2.StandardDeviation(),2));
+        System.out.println("绝对偏移标准差:\t"+Print4.PrintNoZero(p2.StandardDeviation(),2));
         System.out.println("绝对偏移区间:\t["+Print4.Print(p2.MinOfInterval())+"-->"+Print4.Print(p2.MaxOfInterval())+"]");
         System.out.println("相对偏移:\t"+Print4.Print(p2.RelativeOffset()));
         tempArr = "";
         for(int i =0; i < p2.MeasuringTimes(); i++)
         {
-        	tempArr +=" "+ Print4.Print(p2.RelativeOffsetArray(i),0);
+        	tempArr +=" "+ Print4.PrintNoZero(p2.RelativeOffsetArray(i),0);
         }
         System.out.println("相对偏移数组:\t"+tempArr);
-        System.out.println("相对偏移标准差:\t"+Print4.Print(p2.RelativeStandardDeviation(),2));
+        System.out.println("相对偏移标准差:\t"+Print4.PrintNoZero(p2.RelativeStandardDeviation(),2));
         System.out.println("相对偏移区间:\t["+Print4.Print(p2.RelativeMinOfInterval())+"-->"+Print4.Print(p2.RelativeMaxOfInterval())+"]");
         p2.SetTea(20, 0.1);
         tempArr = "";
         for(int i =0; i < p2.MeasuringTimes(); i++)
         {
-        	tempArr +=" "+ Print4.Print(p2.ErrorIndex(i),2);
+        	tempArr +=" "+ Print4.PrintNoZero(p2.ErrorIndex(i),2);
         }
         System.out.println("Error Indexes:\t"+tempArr);
         LinearRegression line=p2.GetLine();
-        System.out.println("方程:\ty="+Print4.Print(line.Slope(),4)+"x+"+Print4.Print(line.Origin(),4));
-        System.out.println("相关系数:\t"+Print4.Print(line.Relation()*line.Relation(),5));
+        System.out.println("方程:\ty="+Print4.PrintNoZero(line.Slope(),4)+"x+"+Print4.PrintNoZero(line.Origin(),4));
+        System.out.println("相关系数:\t"+Print4.PrintNoZero(line.Relation()*line.Relation(),5));
         System.out.println("错误指数均值:\t"+Print4.Print(p2.AverageErrorIndex()));
         System.out.println("错误指数范围:\t"+Print4.Print(p2.MinEI())+" to "+Print4.Print(p2.MaxEI()));
         
         Graph g=new Graph();
-        g.SetAllParameters(20, 0, 1.085, -1.527, 500, 500); //注意：百分比为0时，不画第4和第5条直线
+        g.SetAllParameters(20, 0.25, 1.085, -1.527, 500, 500); //注意：百分比为0时，不画第4和第5条直线
         //g.SetAllParameters(20, 0.25, 1.085, -1.527, 500, 500);
        
         /* 画图配置参数
@@ -244,7 +244,7 @@ public class TestProgramMain
         {
         	for(int j=0;j<p2.MeasuringTimes();j++)
             {
-        		sdiStr += Print4.Print(p2.GetLabDataByString(i,j),0)+"\t";
+        		sdiStr += Print4.PrintNoZero(p2.GetLabDataByString(i,j),0)+"\t";
             }
         	sdiStr +="\n";
         }
@@ -270,7 +270,7 @@ public class TestProgramMain
         	tempArr = "";
         	for(int j=0;j<p3.MeasuringTimes();j++)
             {
-        		tempArr += Print4.Print(p3.GetLabDataSubtractOverallMean(i,j),2)+"\t";
+        		tempArr += Print4.PrintNoZero(p3.GetLabDataSubtractOverallMean(i,j),2)+"\t";
             }
         	System.out.println("第"+String.valueOf(i)+"批第1,2次与总均值之差:\t\t"+tempArr);
         }
@@ -282,22 +282,22 @@ public class TestProgramMain
         	tempArr = "";
         	for(int j=0;j<p3.MeasuringTimes();j++)
             {
-        		tempArr += Print4.Print(p3.GetLabDataSubtractOverallMeanSquare(i,j),4)+"\t";
+        		tempArr += Print4.PrintNoZero(p3.GetLabDataSubtractOverallMeanSquare(i,j),4)+"\t";
             }
         	System.out.println("第"+String.valueOf(i)+"批第1,2次与总均值之差平方:\t\t"+tempArr);
         }
-        System.out.println("测量偏移值:\t"+Print4.Print(p3.Deviant(),2));
+        System.out.println("测量偏移值:\t"+Print4.PrintNoZero(p3.Deviant(),2));
         System.out.println("自由度:\t"+Print4.Print(p3.Freedom()));
         System.out.println("总均值:\t"+Print4.Print(p3.OverallMean()));
-        System.out.println("标准差:\t"+Print4.Print(p3.StandardDeviation(),4));
-        System.out.println("测量标准不确定度:\t"+Print4.Print(p3.GetSa(),4));
-        System.out.println("验证区间:\t["+Print4.Print(p3.MinOfInterval(),2)+"-->"+Print4.Print(p3.MaxOfInterval(),2)+"]");
+        System.out.println("标准差:\t"+Print4.PrintNoZero(p3.StandardDeviation(),4));
+        System.out.println("测量标准不确定度:\t"+Print4.PrintNoZero(p3.GetSa(),4));
+        System.out.println("验证区间:\t["+Print4.PrintNoZero(p3.MinOfInterval(),2)+"-->"+Print4.PrintNoZero(p3.MaxOfInterval(),2)+"]");
         sdiStr="";
         for(int i=0;i<p3.BatchCount();i++)
         {
         	for(int j=0;j<p3.MeasuringTimes();j++)
             {
-        		sdiStr += Print4.Print(p3.GetSDI(i,j),2)+"\t";
+        		sdiStr += Print4.PrintNoZero(p3.GetSDI(i,j),2)+"\t";
             }
         	sdiStr +="\n";
         }
@@ -308,7 +308,7 @@ public class TestProgramMain
         {
         	for(int j=0;j<p3.MeasuringTimes();j++)
             {
-        		sdiStr += Print4.Print(p3.GetLabDataByString(i,j),0)+"\t";
+        		sdiStr += Print4.PrintNoZero(p3.GetLabDataByString(i,j),0)+"\t";
             }
         	sdiStr +="\n";
         }
@@ -328,7 +328,7 @@ public class TestProgramMain
         tempArr="";
         for(int i=0;i<l.MeasuringTimes();i++)
         {
-        	tempArr+=" "+Print4.Print(l.averageY(i),2);
+        	tempArr+=" "+Print4.PrintNoZero(l.averageY(i),2);
         }
         System.out.println("均值(实测浓度):\t"+tempArr);
         //理论浓度
@@ -342,11 +342,11 @@ public class TestProgramMain
         tempArr="";
         for(int i=0;i<l.MeasuringTimes();i++)
         {
-        	tempArr+=" "+Print4.Print(l.averageY(i)-l.TheoreticalY(i),2);
+        	tempArr+=" "+Print4.PrintNoZero(l.averageY(i)-l.TheoreticalY(i),2);
         }
         System.out.println("均值(实测浓度)-理论浓度:\t"+tempArr);
-        System.out.println("方程:\ty="+Print4.Print(l.Slope(),3)+"x+"+Print4.Print(l.Origin(),3));
-        System.out.println("相关系数:\t"+Print4.Print(l.Relation()*l.Relation(),4));
+        System.out.println("方程:\ty="+Print4.PrintNoZero(l.Slope(),3)+"x+"+Print4.PrintNoZero(l.Origin(),3));
+        System.out.println("相关系数:\t"+Print4.PrintNoZero(l.Relation()*l.Relation(),4));
         //
         
         sdiStr="";
@@ -354,7 +354,7 @@ public class TestProgramMain
         {
         	for(int j=0;j<l.MeasuringTimes();j++)
             {
-        		sdiStr += Print4.Print(l.GetLabDataByString(i,j),0)+"\t";
+        		sdiStr += Print4.PrintNoZero(l.GetLabDataByString(i,j),0)+"\t";
             }
         	sdiStr +="\n";
         }
@@ -371,7 +371,7 @@ public class TestProgramMain
         tempArr = "";
         for(int i =0; i < p2.MeasuringTimes(); i++)
         {
-        	tempArr +=" "+ Print4.Print(p2.ErrorIndex(i),2);
+        	tempArr +=" "+ Print4.PrintNoZero(p2.ErrorIndex(i),2);
         }
         System.out.println("线性实验的EI指数:\t"+tempArr);
         

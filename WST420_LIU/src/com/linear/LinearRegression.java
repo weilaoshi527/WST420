@@ -164,10 +164,6 @@ public class LinearRegression extends BaseVerification
     {
     	return this.Relation();
     }
-    public String Relation2()
-    {
-    	return Print4.Print(Relation());
-    }
     /**
      * 斜率
      * @return
@@ -192,10 +188,6 @@ public class LinearRegression extends BaseVerification
     	}
         return slope.doubleValue();
     }
-    public String Slope2()
-    {
-    	return Print4.Print(Slope());
-    }
     /**
      * 截距
      * @return
@@ -209,10 +201,6 @@ public class LinearRegression extends BaseVerification
 	        origin= format(y.Average()-Slope()*x.Average());
     	}
     	return origin.doubleValue();        
-    }
-    public String Origin2()
-    {
-    	return Print4.Print(Origin());
     }
     public String Graph(double concentration,double percent,double maxX,double maxY)
     {
